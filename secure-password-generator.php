@@ -1,12 +1,14 @@
 <?php 
 /*
 	Plugin Name: Secure Password Generator
-	Plugin URI: https://www.oakcreekdev.com/software/wordpress/plugins/secure-password-generator/
+	Plugin URI: https://www.oakcreekdev.com/tools/secure-password-generator/
 	Description: Adds a secure random password generator to your WordPress website. Use shortcode: [secure_pw_gen][/secure_pw_gen]
+	Tags: password generator, security, special characters, strong password, secure password
 	Author: Jeremy Kozan
-	Author URI: https://www.oakcreekdev.com/developers/jeremy-kozan/
+	Author URI: https://www.oakcreekdev.com/about-us/team/jeremy-kozan/
+	Contributors: @oakcreekdev
 	Requires at least: 5.1
-	Tested up to: 5.7
+	Tested up to: 6.1.1
 	Stable tag: 1.0.1
 	Version: 1.0.1
 	Requires PHP: 7.1
@@ -42,44 +44,40 @@ class OCD_Password_Generator {
 		$this->constants();
 		$this->includes();
 		
-		add_action( 'init', [ $this, 'init' ] );
+		add_action( 'init', array( $this, 'init' ) );
 
 	}
 
 	function constants() {
 
-		if ( ! defined( 'OCDPW_VERSION'  ) ) define( 'OCDPW_VERSION',  '1.0.1'                        );
-		if ( ! defined( 'OCDPW_DIR'      ) ) define( 'OCDPW_DIR',      trailingslashit( __DIR__ )     );
-		if ( ! defined( 'OCDPW_DIR_URL'  ) ) define( 'OCDPW_DIR_URL',  plugin_dir_url( __FILE__ )     );
-		if ( ! defined( 'OCDPW_SETTINGS' ) ) define( 'OCDPW_SETTINGS', get_option( 'ocdpw_settings' ) );
+		define( 'OCDPW_VERSION',  '1.0.1'                        );
+		define( 'OCDPW_DIR',      trailingslashit( __DIR__ )     );
+		define( 'OCDPW_DIR_URL',  plugin_dir_url( __FILE__ )     );
+		define( 'OCDPW_SETTINGS', get_option( 'ocdpw_settings' ) );
 
-		if ( ! defined( 'OCDPW_CHARS_SIMILAR'   ) ) define( 'OCDPW_CHARS_SIMILAR',   '!01iloIO'      );
-		if ( ! defined( 'OCDPW_CHARS_AMBIGUOUS' ) ) define( 'OCDPW_CHARS_AMBIGUOUS', '~(){}[]:;,.<>' );
-		if ( ! defined( 'OCDPW_CHARS' ) ) {
-			define( 'OCDPW_CHARS', [
-				'special' => '~!@#$%^&*()_-+={}[]:;,.<>?',
-				'number'  => '012345689',
-				'lower'   => 'abcdefghijklmnopqrstuvwxyz',
-				'upper'   => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
-			] );
-		}
+		define( 'OCDPW_CHARS_SIMILAR',   '!01iloIO'      );
+		define( 'OCDPW_CHARS_AMBIGUOUS', '~(){}[]:;,.<>' );
+		define( 'OCDPW_CHARS', array(
+			'special' => '~!@#$%^&*()_-+={}[]:;,.<>?',
+			'number'  => '012345689',
+			'lower'   => 'abcdefghijklmnopqrstuvwxyz',
+			'upper'   => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+		) );
 
 	}
 
 	function includes() {
 
-		if ( ! class_exists( 'OCD_Password_Generator_Settings' ) ) {
-			require_once OCDPW_DIR . 'admin/settings.php';
-			new OCD_Password_Generator_Settings();
-		}
+		require_once 'admin/settings.php';
+		new OCD_Password_Generator_Settings();
 
 	}
 
 	function init() {
 
-		add_action( 'wp_enqueue_scripts', [ $this, 'register_scripts' ], 999 );
+		add_action( 'wp_enqueue_scripts', array( $this, 'register_scripts' ), 999 );
 
-		add_shortcode( 'secure_pw_gen', [ $this, 'shortcode' ] );
+		add_shortcode( 'secure_pw_gen', array( $this, 'shortcode' ) );
 
 	}
 
@@ -89,20 +87,20 @@ class OCD_Password_Generator {
 
 			$wp_scripts = wp_scripts();
 			if ( empty( $wp_scripts->registered['jquery'] ) ) {
-				wp_register_script( 'jquery', 'https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js', [], '3.6.3' );
+				wp_register_script( 'jquery', 'https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js', array(), '3.6.3' );
 			}
 
 		}
 
-		wp_register_script( 'ocdpw', OCDPW_DIR_URL . 'js/secure-password-generator.js', [ 'jquery' ], OCDPW_VERSION, true );
+		wp_register_script( 'ocdpw', OCDPW_DIR_URL . 'js/secure-password-generator.js', array( 'jquery' ), OCDPW_VERSION, true );
 
-		wp_register_style( 'ocdpw', OCDPW_DIR_URL . 'css/secure-password-generator.css', [], OCDPW_VERSION );
+		wp_register_style( 'ocdpw', OCDPW_DIR_URL . 'css/secure-password-generator.css', array(), OCDPW_VERSION );
 
 	}
 
-	function parse_shortcode_config( $str ) {
+	/*function parse_shortcode_config( $str ) {
 
-		// TODO tomorrow when sober Remember
+		// TODO Remember
 		// dont use quoet enclosure in shortcodeatts (keep args in content)
 		// dont exploge on = and try to strip quotes.... just explode on space, then use strpose to make sure str starts with eg exclude=
 		// better yet, use content area ONLY for exclude so no arg key is needed
@@ -128,14 +126,14 @@ class OCD_Password_Generator {
 
 		return $config_r;
 
-	}
+	}*/
 
 	function shortcode( $atts = [], $content = '', $tag ) {
 
 		// use microtime for a unique id because using a static variable or a class property to store an increment is problematic
 		// certain plugins cause weird behavior (looking at you Divi)
 		usleep(1);
-		$instance_id = 'ocdpw_' . str_replace( ['.', ' '], '', microtime() );
+		$instance_id = 'ocdpw_' . str_replace( array('.', ' '), '', microtime() );
 
 		if ( isset( OCDPW_SETTINGS['include_jquery'] ) && 'yes' === OCDPW_SETTINGS['include_jquery'] ) {
 			wp_enqueue_script( 'jquery' );
@@ -145,25 +143,25 @@ class OCD_Password_Generator {
 
 		$atts = shortcode_atts(
 			array(
-				'exclude' => '',
-				'width'   => 32,
-		), $this->parse_shortcode_config( $content ), $tag );
+				'width'    => 32,
+				'controls' => 'true',
+		), $atts, $tag );
 
 		$chars_r = OCDPW_CHARS;
 		foreach ( $chars_r as $set => $chars ) {
 			$chars_r[$set] = [];
 			$chars = str_split( $chars );
 			foreach ( $chars as $char ) {
-				if ( ! str_contains( $atts['exclude'], $char ) ) {
-					//$chars_r[$set][] = htmlspecialchars( $char );
+				if ( ! str_contains( $content, $char ) ) {
 					$chars_r[$set][] = $char;
 				}
 			}
 		}
 
-		$data = [
+		$data = array(
+			'atts'  => $atts,
 			'chars' => $chars_r,
-			'msg' => [
+			'msg'   => array(
 				'good'    => esc_html__( 'Yes', 'ocdpw' ),
 				'bad'     => esc_html__( 'No', 'ocdpw' ),
 				'count'   => esc_html__( 'Characters selected:', 'ocdpw' ),
@@ -171,8 +169,8 @@ class OCD_Password_Generator {
 				'upper'   => esc_html__( 'Uppercase character:', 'ocdpw' ),
 				'number'  => esc_html__( 'Number:', 'ocdpw' ),
 				'special' => esc_html__( 'Special character:', 'ocdpw' ),
-			],
-		];
+			),
+		);
 
 		$output = '<div class="ocdpw" data-instance="' . $instance_id . '" style="display: none;">';
 			$output .= '<div class="ocdpw-random"></div>';

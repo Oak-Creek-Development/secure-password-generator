@@ -7,9 +7,9 @@ class OCD_Password_Generator_Settings {
 
 	function __construct() {
 
-		add_action( 'admin_menu',            [ $this, 'admin_menu'             ]        );
-		add_action( 'admin_init',            [ $this, 'settings_init'          ]        );
-		add_action( 'admin_enqueue_scripts', [ $this, 'admin_register_scripts' ], 10, 1 );
+		add_action( 'admin_menu',            array( $this, 'admin_menu'             )        );
+		add_action( 'admin_init',            array( $this, 'settings_init'          )        );
+		add_action( 'admin_enqueue_scripts', array( $this, 'admin_register_scripts' ), 10, 1 );
 
 		add_filter( 'plugin_action_links_secure-password-generator/secure-password-generator.php', [ $this, 'settings_link' ] );
 
@@ -19,8 +19,8 @@ class OCD_Password_Generator_Settings {
 
 		if ( 'settings_page_ocdpw_settings' !== $hook ) return;
 
-		wp_enqueue_script( 'ocdpw', OCDPW_DIR_URL . 'admin/js/secure-password-generator.js',   [ 'jquery' ], OCDPW_VERSION, true );
-		wp_enqueue_style(  'ocdpw', OCDPW_DIR_URL . 'admin/css/secure-password-generator.css', [          ], OCDPW_VERSION       );
+		wp_enqueue_script( 'ocdpw', OCDPW_DIR_URL . 'admin/js/secure-password-generator.js',   array( 'jquery' ), OCDPW_VERSION, true );
+		wp_enqueue_style(  'ocdpw', OCDPW_DIR_URL . 'admin/css/secure-password-generator.css', array(          ), OCDPW_VERSION       );
 
 	}
 
@@ -41,7 +41,7 @@ class OCD_Password_Generator_Settings {
 			esc_html__( 'Password Generator', 'ocdpw' ),
 			'manage_options',
 			'ocdpw_settings',
-			[ $this, 'settings_page' ]
+			array( $this, 'settings_page' )
 		);
 
 	}
@@ -116,17 +116,17 @@ class OCD_Password_Generator_Settings {
 		add_settings_field(
 			'include_jquery',
 			esc_html__( 'Include jQuery', 'ocdpw' ),
-			[ $this, 'input_select' ],
+			array( $this, 'input_select' ),
 			'ocdpw_settings',
 			'global_settings',
-			[
+			array(
 				'name'    => 'include_jquery',
 				'desc'    => esc_html__( 'Force loading of jQuery if it is not included in your theme.', 'ocdpw' ),
-				'options' => [
+				'options' => array(
 					'no'  => esc_html__( 'No', 'ocdpw' ),
 					'yes' => esc_html__( 'Yes', 'ocdpw' ),
-				],
-			]
+				),
+			)
 		);
 
 	}
