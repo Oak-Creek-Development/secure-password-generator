@@ -51,7 +51,7 @@ class OCD_Password_Generator {
 	function constants() {
 
 		define( 'OCDPW_VERSION',  '1.0.1'                        );
-		define( 'OCDPW_DIR',      trailingslashit( __DIR__ )     );
+		//define( 'OCDPW_DIR',      trailingslashit( __DIR__ )     );
 		define( 'OCDPW_DIR_URL',  plugin_dir_url( __FILE__ )     );
 		define( 'OCDPW_SETTINGS', get_option( 'ocdpw_settings' ) );
 
@@ -83,6 +83,7 @@ class OCD_Password_Generator {
 
 	function register_scripts() {
 
+		// in case jQuery has been deregistered by a theme or plugin. It's rare but I have seen it happen on occasion.
 		if ( isset( OCDPW_SETTINGS['include_jquery'] ) && 'yes' === OCDPW_SETTINGS['include_jquery'] ) {
 
 			$wp_scripts = wp_scripts();
@@ -128,12 +129,7 @@ class OCD_Password_Generator {
 
 	}*/
 
-	function shortcode( $atts = [], $content = '', $tag ) {
-
-		// use microtime for a unique id because using a static variable or a class property to store an increment is problematic
-		// certain plugins cause weird behavior (looking at you Divi)
-		usleep(1);
-		$instance_id = 'ocdpw_' . str_replace( array('.', ' '), '', microtime() );
+	function shortcode( $atts = array(), $content = '', $tag ) {
 
 		if ( isset( OCDPW_SETTINGS['include_jquery'] ) && 'yes' === OCDPW_SETTINGS['include_jquery'] ) {
 			wp_enqueue_script( 'jquery' );
@@ -143,8 +139,9 @@ class OCD_Password_Generator {
 
 		$atts = shortcode_atts(
 			array(
-				'width'    => 32,
 				'controls' => 'true',
+				'width'    => 'auto',
+				'height'   => 6,
 		), $atts, $tag );
 
 		$chars_r = OCDPW_CHARS;
@@ -165,19 +162,21 @@ class OCD_Password_Generator {
 				'good'    => esc_html__( 'Yes', 'ocdpw' ),
 				'bad'     => esc_html__( 'No', 'ocdpw' ),
 				'count'   => esc_html__( 'Characters selected:', 'ocdpw' ),
+				'special' => esc_html__( 'Special character:', 'ocdpw' ),
+				'number'  => esc_html__( 'Number:', 'ocdpw' ),
 				'lower'   => esc_html__( 'Lowercase character:', 'ocdpw' ),
 				'upper'   => esc_html__( 'Uppercase character:', 'ocdpw' ),
-				'number'  => esc_html__( 'Number:', 'ocdpw' ),
-				'special' => esc_html__( 'Special character:', 'ocdpw' ),
 			),
 		);
 
-		$output = '<div class="ocdpw" data-instance="' . $instance_id . '" style="display: none;">';
-			$output .= '<div class="ocdpw-random"></div>';
+		$instance_id = wp_unique_id( 'ocdpw' );
+		$output  = '<script>var ' . $instance_id . ' = ' . json_encode( $data ) . '</script>';
+		$output .= '<div class="ocdpw" data-instance="' . $instance_id . '" style="display: none;">';
+			$output .= '<div class="ocdpw-random" id="ocdpw-random-' . $instance_id . '"></div>';
 			$output .= '<div class="ocdpw-feedback"></div>';
+			$output .= 'true' == $atts['controls'] ? '<div class="ocdpw-controls"></div>' : '';
 		$output .= '</div>';
 		$output .= '<noscript>' . esc_html__( 'Your browser does not support JavaScript! This password generator requires jQuery.', 'ocdpw' ) . '</noscript>';
-		$output .= '<script>var ' . $instance_id . ' = ' . json_encode( $data ) . '</script>';
 		
 		return $output;
 
