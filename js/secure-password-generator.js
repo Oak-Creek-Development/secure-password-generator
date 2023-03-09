@@ -62,7 +62,9 @@ jQuery(function($){
 			}
 
 			$divFeedback.children('p').append($bad.clone());
-			$divFeedback.children('p.ocdpw-count').children('span').text('0');
+
+			const $count = $divFeedback.children('p.ocdpw-count').children('span');
+			$count.text('0');
 
 
 
@@ -82,20 +84,63 @@ jQuery(function($){
 
 
 
+
+		//const $count = $('.ocdpw > .ocdpw-count > span');
+
+		document.addEventListener('selectionchange', () => {
+
+			let sel = window.getSelection();
+
+			range = sel.getRangeAt(0);
+			let isCurrentInstance = false;
+			//console.log(range.commonAncestorContainer);
+			if($(range.commonAncestorContainer).prop('id') == 'ocdpw-random-'+$this.data('instance')){
+				isCurrentInstance = true;
+			}else{
+				//return false;
+			}
+			//console.log(isCurrentInstance);
+
+			let selR = Array.from(sel.toString());
+
+			// character count requirement
+			if(isCurrentInstance){
+				$count.text(selR.length);
+			}else{
+				$count.text('0');
+			}
+
+			if(isCurrentInstance && 17 < selR.length && 33 > selR.length){
+				$count.addClass('ocdpw-good');
+			}else{
+				$count.removeClass('ocdpw-good');
+			}
+
+			// boolean requirements
+			for(const i in config.chars){
+				// array intersection of selection and character type
+				if(isCurrentInstance && config.chars[i].filter(x => selR.indexOf(x) !== -1).length){
+					$this.find('.ocdpw-'+i+' > span').replaceWith($good.clone());
+				}else{
+					$this.find('.ocdpw-'+i+' > span').replaceWith($bad.clone());
+				}
+			}
+
+		});
+
+
 		});
 
 	});
 
 });
 
-
-
 		document.addEventListener('selectionchange', () => {
 
 			let sel = window.getSelection();
 			if(1 == sel.rangeCount){
-				console.log(sel.getRangeAt(0));
-				console.log(sel.toString());
+				//console.log(sel.getRangeAt(0));
+				//console.log(sel.toString());
 			}
 			
 
