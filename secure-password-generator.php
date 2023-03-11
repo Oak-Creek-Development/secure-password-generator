@@ -140,24 +140,28 @@ class OCD_Password_Generator {
 		$atts = shortcode_atts(
 			array(
 				'controls' => 'true',
-				'width'    => 'auto',
 				'height'   => 6,
 		), $atts, $tag );
 
 		$chars_r = OCDPW_CHARS;
+		$entities_r = array();
 		foreach ( $chars_r as $set => $chars ) {
-			$chars_r[$set] = [];
+			$chars_r[$set] = array();
 			$chars = str_split( $chars );
 			foreach ( $chars as $char ) {
 				if ( ! str_contains( $content, $char ) ) {
 					$chars_r[$set][] = $char;
+					if ( 'special' === $set ) {
+						$entities_r[$set][] = htmlspecialchars( $char );
+					}
 				}
 			}
 		}
 
 		$data = array(
-			'atts'  => $atts,
-			'chars' => $chars_r,
+			'atts'     => $atts,
+			'chars'    => $chars_r,
+			'entities' => $entities_r,
 			'msg'   => array(
 				'good'    => esc_html__( 'Yes', 'ocdpw' ),
 				'bad'     => esc_html__( 'No', 'ocdpw' ),

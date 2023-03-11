@@ -8,14 +8,24 @@ jQuery(function($){
 			//console.log($this);
 			//console.log(config.chars.special);
 
-			for(const i in config.chars.special){
-				config.chars.special[i] = $("<textarea/>").html(config.chars.special[i]).text();
-			}
+			/*for(const i in config.chars.special){
+				console.log(config.chars.special[i]);
+				//config.chars.special[i] = $("<textarea/>").html(config.chars.special[i]).text();
+				if('<' == config.chars.special[i]){
+					config.chars.special[i] = '&lt;';
+				}
+				if('>' == config.chars.special[i]){
+					config.chars.special[i] = '&gt;';
+				}
+				if('&' == config.chars.special[i]){
+					config.chars.special[i] = '&amp;';
+				}
+			}*/
 
 			/*console.log(config);*/
 			//console.log(config.chars.special);
 
-			const charsR = config.chars.number.concat(config.chars.special, config.chars.lower, config.chars.upper);
+			const charsR = config.chars.number.concat(config.entities.special, config.chars.lower, config.chars.upper);
 			//const charsR = config.chars.special;
 
 			//console.log(charsR);
@@ -27,8 +37,9 @@ jQuery(function($){
 			let prev = '';
 
 			// build random char string
-			for(let i = 0; i < 12; i++){
-				//rand += '<span>';
+			for(let i = 0; i < config.atts.height * 2; i++){
+
+				rand += '<span>';
 
 				for(let j = 0; j < 32; j++){
 
@@ -44,10 +55,11 @@ jQuery(function($){
 
 				}
 
-				//rand += '</span>';
+				rand += '</span>';
+
 			}
 
-			$divRandom.append('<textarea rows="'+config.atts.height+'" readonly>'+rand+'</textarea>');
+			$divRandom.append(rand);
 
 
 
@@ -62,7 +74,9 @@ jQuery(function($){
 			}
 
 			$divFeedback.children('p').append($bad.clone());
-			$divFeedback.children('p.ocdpw-count').children('span').text('0');
+
+			const $count = $divFeedback.children('p.ocdpw-count').children('span');
+			$count.text('0');
 
 
 
@@ -82,27 +96,56 @@ jQuery(function($){
 
 
 
+
+
+			document.addEventListener('selectionchange', () => {
+
+				let selection = window.getSelection();
+				let isCurrentInstance = false;
+
+				if(0 < selection.rangeCount){
+					let range = selection.getRangeAt(0);
+
+					let commonAncestor = range.commonAncestorContainer;
+					if(commonAncestor.nodeType === Node.TEXT_NODE){
+						commonAncestor = commonAncestor.parentNode.parentNode;
+					}
+
+					if($(commonAncestor).prop('id') == 'ocdpw-random-'+$this.data('instance')){
+						isCurrentInstance = true;
+					}
+				}
+
+				let selR = Array.from(selection.toString());
+
+				// character count requirement
+				if(isCurrentInstance){
+					$count.text(selR.length);
+				}else{
+					$count.text('0');
+				}
+
+				if(isCurrentInstance && 17 < selR.length && 33 > selR.length){
+					$count.addClass('ocdpw-good');
+				}else{
+					$count.removeClass('ocdpw-good');
+				}
+
+				// boolean requirements
+				for(const i in config.chars){
+					// array intersection of selection and character type
+					if(isCurrentInstance && config.chars[i].filter(x => selR.indexOf(x) !== -1).length){
+						$this.find('.ocdpw-'+i+' > span').replaceWith($good.clone());
+					}else{
+						$this.find('.ocdpw-'+i+' > span').replaceWith($bad.clone());
+					}
+				}
+
+			});
+
+
 		});
 
 	});
 
 });
-
-
-
-		document.addEventListener('selectionchange', () => {
-
-			let sel = window.getSelection();
-			if(1 == sel.rangeCount){
-				console.log(sel.getRangeAt(0));
-				console.log(sel.toString());
-			}
-			
-
-			/*for (let i = 0; i < sel.rangeCount; i++) {
-				ranges[i] = sel.getRangeAt(i);
-			}
-
-			console.log(ranges);*/
-
-		});

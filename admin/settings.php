@@ -68,35 +68,51 @@ class OCD_Password_Generator_Settings {
 			<span id="copy-success" style="display: none;"><?php esc_html_e( 'Shortcode copied to clipboard.', 'ocdpw' ); ?></span>
 			<span id="copy-fail" style="display: none;"><?php esc_html_e( 'Shortcode not copied to clipboard. Please copy it manually.', 'ocdpw' ); ?></span>
 			<p><?php esc_html_e( 'Use the controls below to create a shortcode with your desired options.', 'ocdpw' ); ?></p>
-			<table class="form-table" role="presentation"><tbody><tr>
-				<th><?php esc_html_e( 'Exclude Characters', 'ocdpw' ); ?></th>
-				<td><fieldset>
-					<p><strong><?php esc_html_e( 'Character Groups', 'ocdpw' ); ?></strong></p>
-					<div>
-						<label for="similar">
-							<input type="checkbox" class="exclude group" id="similar" value="<?php echo esc_attr( OCDPW_CHARS_SIMILAR ); ?>" />
-							<?php esc_html_e( 'Exclude Similar Characters:', 'ocdpw' ); ?> &quot;<?php echo OCDPW_CHARS_SIMILAR; ?>&quot;
-						</label>
-						<br />
-						<label for="ambiguous">
-							<input type="checkbox" class="exclude group" id="ambiguous" value="<?php echo esc_attr( OCDPW_CHARS_AMBIGUOUS ); ?>" />
-							<?php esc_html_e( 'Exclude Ambiguous Characters:', 'ocdpw' ); ?> &quot;<?php echo OCDPW_CHARS_AMBIGUOUS; ?>&quot;
-						</label>
-					</div>
-					<p><strong><?php esc_html_e( 'Exclude Individual Characters', 'ocdpw' ); ?></strong></p>
-					<?php foreach ( OCDPW_CHARS as $set => $chars ) : ?>
-						<?php $chars = str_split( $chars ); ?>
-						<div class="set">
-							<?php foreach ( $chars as $char ) : $char = esc_attr( $char ); ?>
-								<label for="exclude_<?php echo $char; ?>">
-									<input type="checkbox" class="exclude individual" id="exclude_<?php echo $char; ?>" value="<?php echo $char; ?>" />
-									<span><?php echo $char; ?></span>
-								</label>
-							<?php endforeach; ?>
+			<table class="form-table" role="presentation"><tbody>
+				<tr>
+					<th><?php esc_html_e( 'Options', 'ocdpw' ); ?></th>
+					<td><fieldset>
+						<p><strong><?php esc_html_e( 'Rows', 'ocdpw' ); ?></strong></p>
+						<input type="number" class="option" id="rows" value="6" min="1" />
+						<!-- <p><strong><?php esc_html_e( 'Test', 'ocdpw' ); ?></strong></p>
+						<input type="text" class="option" id="test" /> -->
+						<p><strong><?php esc_html_e( 'Show Controls', 'ocdpw' ); ?></strong></p>
+						<select class="option" id="controls">
+							<option value="yes">Yes</option>
+							<option value="no">No</option>
+						</select>
+					</fieldset></td>
+				</tr>
+				<tr>
+					<th><?php esc_html_e( 'Exclude Characters', 'ocdpw' ); ?></th>
+					<td><fieldset>
+						<p><strong><?php esc_html_e( 'Character Groups', 'ocdpw' ); ?></strong></p>
+						<div>
+							<label for="similar">
+								<input type="checkbox" class="exclude group" id="similar" value="<?php echo esc_attr( OCDPW_CHARS_SIMILAR ); ?>" />
+								<?php esc_html_e( 'Exclude Similar Characters:', 'ocdpw' ); ?> &quot;<?php echo OCDPW_CHARS_SIMILAR; ?>&quot;
+							</label>
+							<br />
+							<label for="ambiguous">
+								<input type="checkbox" class="exclude group" id="ambiguous" value="<?php echo esc_attr( OCDPW_CHARS_AMBIGUOUS ); ?>" />
+								<?php esc_html_e( 'Exclude Ambiguous Characters:', 'ocdpw' ); ?> &quot;<?php echo OCDPW_CHARS_AMBIGUOUS; ?>&quot;
+							</label>
 						</div>
-					<?php endforeach; ?>
-				</fieldset></td>
-			</tr></tbody></table>
+						<p><strong><?php esc_html_e( 'Exclude Individual Characters', 'ocdpw' ); ?></strong></p>
+						<?php foreach ( OCDPW_CHARS as $set => $chars ) : ?>
+							<?php $chars = str_split( $chars ); ?>
+							<div class="set">
+								<?php foreach ( $chars as $char ) : $char = esc_attr( $char ); ?>
+									<label for="exclude_<?php echo $char; ?>">
+										<input type="checkbox" class="exclude individual" id="exclude_<?php echo $char; ?>" value="<?php echo $char; ?>" />
+										<span><?php echo $char; ?></span>
+									</label>
+								<?php endforeach; ?>
+							</div>
+						<?php endforeach; ?>
+					</fieldset></td>
+				</tr>
+			</tbody></table>
 		</div>
 		<?php
 
