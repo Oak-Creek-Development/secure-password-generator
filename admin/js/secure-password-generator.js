@@ -1,8 +1,10 @@
 jQuery(function($){
 
 	const $boxes = $('.exclude');
+	const $options = $('.option');
 	const $shortcode = $('#shortcode')[0];
-	const shortcodeArgs = { exclude: '' };
+	const shortcodeArgs = {};
+	let   shortcodeContent = '';
 
 	const copyAlert = $e => {
 		$e.show();
@@ -19,19 +21,19 @@ jQuery(function($){
 	};
 
 	const generateShortcode = () => {
-		shortcodeArgs.exclude = $boxes.filter('.individual:checked').map(function(){
-			return this.value;
-		}).get().join('');
-
-		let str = '';
+		let atts = '';
 		for(let i in shortcodeArgs){
 			if(shortcodeArgs[i].length){
-				str += shortcodeArgs[i];
+				atts += ' '+i+'="'+shortcodeArgs[i]+'"';
 			}
 		}
 
+		shortcodeContent = $boxes.filter('.individual:checked').map(function(){
+			return this.value;
+		}).get().join('');
+
 		// use open and close tags to prevent problems when closing bracket "]" is part of the string
-		str = '[secure_pw_gen]'+str.trim()+'[/secure_pw_gen]';
+		let str = '[secure_pw_gen'+atts+']'+shortcodeContent.trim()+'[/secure_pw_gen]';
 		
 		$shortcode.size = str.length;
 		$shortcode.value = str;
@@ -56,11 +58,16 @@ jQuery(function($){
 			// if an individual box was clicked, set state of group boxes appropriately
 			if(this.classList.contains('individual')){
 				$boxes.filter('.group').each(function(){
-					let common = strIntersect(this.value, shortcodeArgs.exclude);
+					let common = strIntersect(this.value, shortcodeContent);
 					$(this).prop('checked', this.value.length === common.length);
 				});
 			}
 
+		});
+
+		$options.on('change keyup', function(){
+			shortcodeArgs[$(this).attr('id')] = this.value;
+			generateShortcode();
 		});
 
 		$('#copy').on('click', function(e){
