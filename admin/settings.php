@@ -64,7 +64,7 @@ class OCD_Password_Generator_Settings {
 
 			<h2 class="shortcode"><?php esc_html_e( 'Shortcode Settings', 'ocdpw' ); ?></h2>
 			<input type="text" id="shortcode" value="" onClick="this.select();" readonly />
-			<button class="button button-primary" id="copy"><?php esc_html_e( 'Copy Shortcode', 'ocdpw' ); ?></button>
+			<button class="button button-secondary" id="copy"><?php esc_html_e( 'Copy Shortcode', 'ocdpw' ); ?></button>
 			<span id="copy-success" style="display: none;"><?php esc_html_e( 'Shortcode copied to clipboard.', 'ocdpw' ); ?></span>
 			<span id="copy-fail" style="display: none;"><?php esc_html_e( 'Shortcode not copied to clipboard. Please copy it manually.', 'ocdpw' ); ?></span>
 			<p><?php esc_html_e( 'Use the controls below to create a shortcode with your desired options.', 'ocdpw' ); ?></p>
@@ -84,7 +84,7 @@ class OCD_Password_Generator_Settings {
 					</fieldset></td>
 				</tr>
 				<tr>
-					<th><?php esc_html_e( 'Exclude Characters', 'ocdpw' ); ?></th>
+					<th><?php esc_html_e( 'Exclusions', 'ocdpw' ); ?></th>
 					<td><fieldset>
 						<p><strong><?php esc_html_e( 'Character Groups', 'ocdpw' ); ?></strong></p>
 						<div>

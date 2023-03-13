@@ -1,14 +1,13 @@
 jQuery(function($){
 
-	const $boxes = $('.exclude');
-	const $options = $('.option');
-	const $shortcode = $('#shortcode')[0];
-	const shortcodeArgs = {};
-	let   shortcodeContent = '';
+	const $boxes = $('.exclude'),
+	      $options = $('.option'),
+	      $shortcode = $('#shortcode')[0],
+	      shortcodeArgs = {};
+	let shortcodeContent = '';
 
 	const copyAlert = $e => {
 		$e.show();
-
 		setTimeout(() => {
 			$e.fadeOut(500, 'linear');
 		}, 1600);
