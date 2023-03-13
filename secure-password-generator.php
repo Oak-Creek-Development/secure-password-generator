@@ -140,7 +140,7 @@ class OCD_Password_Generator {
 		$atts = shortcode_atts(
 			array(
 				'controls' => 'true',
-				'height'   => 6,
+				'rows'     => 6,
 		), $atts, $tag );
 
 		$chars_r = OCDPW_CHARS;
@@ -177,7 +177,7 @@ class OCD_Password_Generator {
 		$output  = '<script>var ' . $instance_id . ' = ' . json_encode( $data ) . '</script>';
 		$output .= '<div class="ocdpw" data-instance="' . $instance_id . '" style="display: none;">';
 			$output .= '<div class="ocdpw-random" id="ocdpw-random-' . $instance_id . '"></div>';
-			$output .= '<div class="ocdpw-feedback"></div>';
+			$output .= '<div class="ocdpw-feedback"><div class="ocdpw-requirements"></div><div class="ocdpw-actions"></div></div>';
 			$output .= 'true' == $atts['controls'] ? '<div class="ocdpw-controls"></div>' : '';
 		$output .= '</div>';
 		$output .= '<noscript>' . esc_html__( 'Your browser does not support JavaScript! This password generator requires jQuery.', 'ocdpw' ) . '</noscript>';

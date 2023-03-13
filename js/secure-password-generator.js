@@ -31,13 +31,14 @@ jQuery(function($){
 			//console.log(charsR);
 
 			$divRandom = $this.find('.ocdpw-random');
-			$divFeedback = $this.find('.ocdpw-feedback');
+			$divFeedback = $this.find('.ocdpw-feedback > .ocdpw-requirements');
+			$divActions = $this.find('.ocdpw-feedback > .ocdpw-actions');
 
 			let rand = '';
 			let prev = '';
 
 			// build random char string
-			for(let i = 0; i < config.atts.height * 2; i++){
+			for(let i = 0; i < config.atts.rows * 2; i++){
 
 				rand += '<span>';
 
@@ -46,6 +47,7 @@ jQuery(function($){
 					let cur = charsR[Math.floor(Math.random() * charsR.length)];
 
 					// prevent repetition
+					// TODO: add option to allow or prevent repetition
 					if(cur == prev){
 						j--;
 					}else{
@@ -79,6 +81,7 @@ jQuery(function($){
 			$count.text('0');
 
 
+			$divActions.append('<button>Copy Random</button>');
 
 
 
@@ -86,7 +89,14 @@ jQuery(function($){
 
 
 			$this.show();
-			//$this.find('textarea').autoResize().trigger('change.dynSiz');
+
+
+			// set width to 64 characters (32 characters on mobile)
+			let spanWidth = $divRandom.children('span').width();
+			$this.css('--ocdpw-span-width', spanWidth+'px');
+			//$divFeedback.children('p').css('max-width', spanWidth);
+
+			//
 
 
 
