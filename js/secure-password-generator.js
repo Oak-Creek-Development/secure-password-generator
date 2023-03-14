@@ -1,5 +1,22 @@
 jQuery(function($){
 
+	const ocdpwResize = function(){
+		//console.log($('.ocdpw > .ocdpw-random > span:first-child').position().top);
+		let $ocdpwFirstSpan = $('.ocdpw > .ocdpw-random > span:first-child'),
+		    ocdpwFirstSpanTop  = $ocdpwFirstSpan.position().top,
+		    ocdpwSecondSpanTop = $ocdpwFirstSpan.next().position().top;
+
+		if(ocdpwFirstSpanTop == ocdpwSecondSpanTop){
+			$('.ocdpw').addClass('wide');
+		}else{
+			$('.ocdpw').removeClass('wide');
+		}
+	};
+
+	$(window).resize(function(){
+		ocdpwResize();
+	});
+
 	$(document).ready(function(){
 
 		$('.ocdpw').each(function(){
@@ -81,7 +98,7 @@ jQuery(function($){
 			$count.text('0');
 
 
-			$divActions.append('<button>Copy Random</button>');
+			$divActions.append('<button class="button button-primary btn btn-primary btn-ocdpw">'+config.msg.button+'</button>');
 
 
 
@@ -155,6 +172,8 @@ jQuery(function($){
 
 
 		});
+
+		ocdpwResize();
 
 	});
 

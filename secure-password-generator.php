@@ -163,6 +163,7 @@ class OCD_Password_Generator {
 			'chars'    => $chars_r,
 			'entities' => $entities_r,
 			'msg'   => array(
+				'button'  => esc_html__( 'Copy Random', 'ocdpw' ),
 				'good'    => esc_html__( 'Yes', 'ocdpw' ),
 				'bad'     => esc_html__( 'No', 'ocdpw' ),
 				'count'   => esc_html__( 'Characters selected:', 'ocdpw' ),

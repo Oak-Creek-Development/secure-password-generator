@@ -74,6 +74,7 @@ class OCD_Password_Generator_Settings {
 					<td><fieldset>
 						<p><strong><?php esc_html_e( 'Rows', 'ocdpw' ); ?></strong></p>
 						<input type="number" class="option" id="rows" value="6" min="1" />
+						<p class="description"><?php esc_html_e( 'Note: Will be double on mobile layout.', 'ocdpw' ); ?></p>
 						<!-- <p><strong><?php esc_html_e( 'Test', 'ocdpw' ); ?></strong></p>
 						<input type="text" class="option" id="test" /> -->
 						<p><strong><?php esc_html_e( 'Show Controls', 'ocdpw' ); ?></strong></p>
